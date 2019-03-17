@@ -1,0 +1,6 @@
+pers\mrwangx\cquptcrawler\pojo\BaseURL.class
+pers\mrwangx\cquptcrawler\pojo\Student.class
+pers\mrwangx\cquptcrawler\pojo\Course.class
+pers\mrwangx\cquptcrawler\util\StudentUtil.class
+pers\mrwangx\cquptcrawler\main\Main.class
+pers\mrwangx\cquptcrawler\service\StuCourses.class

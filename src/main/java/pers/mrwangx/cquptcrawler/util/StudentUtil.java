@@ -1,13 +1,16 @@
 package pers.mrwangx.cquptcrawler.util;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import pers.mrwangx.cquptcrawler.pojo.BaseURL;
 import pers.mrwangx.cquptcrawler.pojo.Student;
 
 import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -20,20 +23,16 @@ import java.util.List;
  *****/
 public class StudentUtil {
 
-
-    public static final String BASE_URL = "http://jwzx.cqu.pt";
-
-
     /**
      * @description 获取学生信息
      * @param key 搜寻关键词
      * @return 学生信息list
      */
-    public static List<Student> getStudents(String key) {
+    public static List<Student> getStudents(String key, BaseURL baseURL) {
         List<Student> list = null;
         String url = "/data/json_StudentSearch.php";
         try {
-            Document doc = Jsoup.connect(BASE_URL + url).data("searchKey", key).get();
+            Document doc = Jsoup.connect(baseURL.getUrl() + url).data("searchKey", key).get();
             JSONObject resdata = JSONObject.parseObject(doc.body().text());
             if (resdata.getInteger("code") == 0) {
                 list = new ArrayList<>();
@@ -52,12 +51,12 @@ public class StudentUtil {
      * @description 展示学生图片
      * @param sno 学号
      */
-    public static void showStuPhoto(String sno) {
+    public static void showStuPhoto(String sno, BaseURL baseURL) {
         if (Desktop.isDesktopSupported()) {
             Desktop dp = Desktop.getDesktop();
             if (dp.isSupported(Desktop.Action.BROWSE)) {
                 try {
-                    dp.browse(new URI(BASE_URL + "/showstupic.php?xh=" + sno));
+                    dp.browse(new URI(baseURL.getUrl() + "/showstupic.php?xh=" + sno));
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (URISyntaxException e) {
@@ -67,6 +66,23 @@ public class StudentUtil {
         }
     }
 
+    public static String toJson(Object obj, Class clazz, String... fieldNames) throws NoSuchFieldException, IllegalAccessException {
 
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("{");
+
+        for (int i = 0; i < fieldNames.length; i++) {
+            Field field = clazz.getDeclaredField(fieldNames[i]);
+            field.setAccessible(true);
+            if (i == fieldNames.length - 1) {
+                sb.append(field.getName() + ":" + field.get(obj) + "}");
+            } else {
+                sb.append(field.getName() + ":" + field.get(obj) + ",");
+            }
+        }
+
+        return sb.toString();
+    }
 
 }

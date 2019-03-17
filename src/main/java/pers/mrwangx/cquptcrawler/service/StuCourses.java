@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import pers.mrwangx.cquptcrawler.pojo.BaseURL;
 import pers.mrwangx.cquptcrawler.pojo.Course;
 import pers.mrwangx.cquptcrawler.util.StudentUtil;
 
@@ -24,9 +25,11 @@ public class StuCourses {
     public static final String url = "/kebiao/kb_stu.php?xh=";
 
     private Course[][][] courses;
+    private BaseURL baseURL;
 
-    public StuCourses(String sno) {
+    public StuCourses(String sno, BaseURL baseURL) {
         try {
+            setBaseURL(baseURL);
             setCourses(sno);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,7 +58,7 @@ public class StuCourses {
      */
     public void setCourses(String sno) throws IOException {
         this.courses = new Course[schoolweeks][coursenums][weekdays];
-        Document doc = Jsoup.connect(StudentUtil.BASE_URL + url).data("xh", sno).get();
+        Document doc = Jsoup.connect(baseURL.getUrl() + url).data("xh", sno).get();
         Elements table = doc.select("table"); //获取课表table
         Elements trs = table.select("tr"); //获取所有一行
 
@@ -124,4 +127,11 @@ public class StuCourses {
         return codes.toString();
     }
 
+    public BaseURL getBaseURL() {
+        return baseURL;
+    }
+
+    public void setBaseURL(BaseURL baseURL) {
+        this.baseURL = baseURL;
+    }
 }

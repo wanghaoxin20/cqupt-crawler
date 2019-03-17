@@ -90,14 +90,34 @@ public class Course {
 
     public void setWeeks(String weeks) {
         this.weeks = new ArrayList<>();
+        int flag = 0;
+        if (weeks.contains("单")) { //判断单双周
+            flag = 1;
+        } else if (weeks.contains("双")) {
+            flag = 2;
+        }
         String[] wks = weeks.replaceAll("单|双|周", "").split(",");
         for (String w : wks) {
             String[] num = w.split("-");
             if (num.length > 1) {
                 int start = Integer.parseInt(num[0]);
                 int end = Integer.parseInt(num[1]);
-                for (int i = start; i <= end; i++) {
-                    this.weeks.add(i);
+                if (flag == 0) {
+                    for (int i = start; i <= end; i++) {
+                        this.weeks.add(i);
+                    }
+                } else if (flag == 1) {
+                    for (int i = start; i <= end; i++) {
+                        if (i % 2 == 1) {
+                            this.weeks.add(i);
+                        }
+                    }
+                } else if (flag == 2) {
+                    for (int i = start; i <= end; i++) {
+                        if (i % 2 == 0) {
+                            this.weeks.add(i);
+                        }
+                    }
                 }
             } else {
                 this.weeks.add(Integer.parseInt(num[0]));

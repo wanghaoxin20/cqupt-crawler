@@ -1,6 +1,8 @@
 package pers.mrwangx.cquptcrawler.pojo;
 
 import com.alibaba.fastjson.JSONObject;
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
 
 /****
  * @author:MrWangx
