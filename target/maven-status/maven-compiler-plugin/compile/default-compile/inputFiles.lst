@@ -1,6 +1,8 @@
-D:\programing\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\cquptcrawler\pojo\BaseURL.java
-D:\programing\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\cquptcrawler\service\StuCourses.java
-D:\programing\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\cquptcrawler\pojo\Student.java
-D:\programing\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\cquptcrawler\util\StudentUtil.java
-D:\programing\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\cquptcrawler\pojo\Course.java
-D:\programing\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\cquptcrawler\main\Main.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\entity\Course.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\CquptCrawler.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\entity\ListCourse.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\main\Main.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\StuAllCourses.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\entity\Student.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\entity\StuCourses.java
+C:\Users\MrWangx\programing\workplace\idea_workplace\Tools\cqupt-crawler\src\main\java\pers\mrwangx\tools\cquptcrawler\entity\URLConfig.java
