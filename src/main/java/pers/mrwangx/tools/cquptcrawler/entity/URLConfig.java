@@ -9,7 +9,7 @@ public enum URLConfig {
 
 
     LAN("http://jwzx.cqupt.edu.cn"),
-    WAN("http://jwzx.cqu.pt"),
+    WAN("http://jwzx.cquptx.cn"),
     COURSE("/kebiao/kb_stu.php?xh="),
     STUMES("/data/json_StudentSearch.php"),
     STUPIC("/showstupic.php?xh=");

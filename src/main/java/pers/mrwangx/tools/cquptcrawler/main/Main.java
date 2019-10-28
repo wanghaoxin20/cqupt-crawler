@@ -80,6 +80,9 @@ public class Main {
                     } catch (NumberFormatException e) {
                         System.out.println("参数不正确:" + e.getMessage());
                     }
+                } else if (line.hasOption("h")) {
+                    HelpFormatter helpFormatter = new HelpFormatter();
+                    helpFormatter.printHelp("cqupt-crawler", options);
                 }
 
             }
@@ -89,7 +92,8 @@ public class Main {
     public static Options createCommandOptions() {
         Options options = new Options();
 
-        Option help = Option.builder("help")
+        Option help = Option.builder("h")
+                .longOpt("help")
                 .desc("显示帮助信息")
                 .build();
 
