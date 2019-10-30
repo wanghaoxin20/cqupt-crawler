@@ -1,6 +1,8 @@
 package pers.mrwangx.tools.cquptcrawler;
 
+import com.alibaba.fastjson.JSON;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
+import pers.mrwangx.tools.cquptcrawler.entity.jwzx.User;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -53,7 +55,13 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        CquptCrawler.searchStudent("王", URLConfig.WAN).forEach(System.out::println);
+        String sessionId = CquptCrawler.getJWZXSessionId(URLConfig.LAN);
+        System.out.println(sessionId);
+        User user = new User("2016211995", "102558", sessionId);
+        String vCode = CquptCrawler.vCodeInput(URLConfig.LAN, sessionId);
+        System.out.println(JSON.toJSONString(CquptCrawler.JWZXLogin(URLConfig.LAN, user, vCode)));
+        CquptCrawler.downloadChineseTranscripts(URLConfig.LAN, user, "C:\\Users\\MrWangx\\Desktop");
+        CquptCrawler.downloadStuPic(URLConfig.LAN, 2016211995, user.getSessionId(), "C:\\Users\\MrWangx\\Desktop");
     }
 
 }

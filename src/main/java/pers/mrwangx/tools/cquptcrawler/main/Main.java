@@ -1,6 +1,8 @@
 package pers.mrwangx.tools.cquptcrawler.main;
 
 import org.apache.commons.cli.*;
+import pers.mrwangx.tools.cquptcrawler.CquptCrawler;
+import pers.mrwangx.tools.cquptcrawler.entity.StuCourses;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
 
 import java.io.IOException;
@@ -80,6 +82,10 @@ public class Main {
                     } catch (NumberFormatException e) {
                         System.out.println("参数不正确:" + e.getMessage());
                     }
+                } else if (line.hasOption("scs")) {
+                  String value = line.getOptionValue("scs");
+                    StuCourses stuCourses = CquptCrawler.searchCourse(Integer.parseInt(value), netType);
+                    System.out.println(CquptCrawler.stuCoursesDisplay(stuCourses));
                 } else if (line.hasOption("h")) {
                     HelpFormatter helpFormatter = new HelpFormatter();
                     helpFormatter.printHelp("cqupt-crawler", options);
@@ -127,10 +133,19 @@ public class Main {
                 )
                 .build();
 
+        Option scs = Option.builder("scs")
+                .argName("stuno")
+                .hasArg()
+                .desc(
+                        "显示所有课程信息，参数为学号"
+                )
+                .build();
+
         options.addOption(help);
         options.addOption(nt);
         options.addOption(stu);
         options.addOption(cs);
+        options.addOption(scs);
 
         return options;
     }

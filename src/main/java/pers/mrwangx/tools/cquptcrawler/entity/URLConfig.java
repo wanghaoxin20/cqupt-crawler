@@ -12,6 +12,11 @@ public enum URLConfig {
     WAN("http://jwzx.cquptx.cn"),
     COURSE("/kebiao/kb_stu.php?xh="),
     STUMES("/data/json_StudentSearch.php"),
+    LOGIN("/checkLogin.php"),
+    VIMG("/createValidationCode.php"),
+    JWZX_SESSIONID("/login.php"),
+    CREATE_CHINESE_TRANSCRIPTS("/dzzm/stuCjZw.php?xh="),
+    DOWNLOAD_CHINESE_TRANSCRIPTS("/dzzm/downLoad.php?id="),
     STUPIC("/showstupic.php?xh=");
 
     private String url;
