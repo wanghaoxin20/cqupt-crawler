@@ -8,18 +8,18 @@ package pers.mrwangx.tools.cquptcrawler.entity.jwzx;
  **/
 public class User {
 
-    private String sno;
+    private int sno;
     private String pwd;
     private String sessionId;
 
     public User() {}
 
-    public User(String sno, String pwd) {
+    public User(int sno, String pwd) {
         this.sno = sno;
         this.pwd = pwd;
     }
 
-    public User(String sno, String pwd, String sessionId) {
+    public User(int sno, String pwd, String sessionId) {
         this.sno = sno;
         this.pwd = pwd;
         this.sessionId = sessionId;
@@ -33,11 +33,11 @@ public class User {
         this.sessionId = sessionId;
     }
 
-    public String getSno() {
+    public int getSno() {
         return sno;
     }
 
-    public void setSno(String sno) {
+    public void setSno(int sno) {
         this.sno = sno;
     }
 

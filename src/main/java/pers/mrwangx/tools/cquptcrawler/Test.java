@@ -57,11 +57,14 @@ public class Test {
     public static void main(String[] args) {
         String sessionId = CquptCrawler.getJWZXSessionId(URLConfig.LAN);
         System.out.println(sessionId);
-        User user = new User("2016211995", "102558", sessionId);
+        User user = new User(2016211995, "102558", sessionId);
         String vCode = CquptCrawler.vCodeInput(URLConfig.LAN, sessionId);
         System.out.println(JSON.toJSONString(CquptCrawler.JWZXLogin(URLConfig.LAN, user, vCode)));
         CquptCrawler.downloadChineseTranscripts(URLConfig.LAN, user, "C:\\Users\\MrWangx\\Desktop");
-        CquptCrawler.downloadStuPic(URLConfig.LAN, 2016211995, user.getSessionId(), "C:\\Users\\MrWangx\\Desktop");
+        CquptCrawler.downloadStudentStatusProof(URLConfig.LAN, user.getSno(), user.getSessionId(), "C:\\Users\\MrWangx\\Desktop");
+        CquptCrawler.downloadStuPic(URLConfig.LAN, 2016211945, user.getSessionId(), "C:\\Users\\MrWangx\\Desktop");
+        CquptCrawler.downloadStuPic(URLConfig.LAN, 2016211984, user.getSessionId(), "C:\\Users\\MrWangx\\Desktop");
+        CquptCrawler.downloadStuPic(URLConfig.LAN, 2016211986, user.getSessionId(), "C:\\Users\\MrWangx\\Desktop");
     }
 
 }

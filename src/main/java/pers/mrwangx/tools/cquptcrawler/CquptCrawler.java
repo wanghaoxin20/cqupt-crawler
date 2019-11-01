@@ -14,7 +14,6 @@ import pers.mrwangx.tools.cquptcrawler.entity.jwzx.LoginResponseInfo;
 import pers.mrwangx.tools.cquptcrawler.entity.jwzx.User;
 
 import javax.imageio.ImageIO;
-import javax.print.DocFlavor;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -121,7 +120,7 @@ public class CquptCrawler {
         LoginResponseInfo loginInfo = null;
         try {
             System.out.println(String.format("登录{sno:%s, pwd:%s, vCode:%s}", user.getSno(), user.getPwd(), vCode));
-            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.LOGIN.getUrl()).method(Connection.Method.POST).data("name", user.getSno()).data("password", user.getPwd()).data("vCode", vCode).cookie(JWZX_SESSIONID_NAME, user.getSessionId()).execute();
+            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.LOGIN.getUrl()).method(Connection.Method.POST).data("name", user.getSno() + "").data("password", user.getPwd()).data("vCode", vCode).cookie(JWZX_SESSIONID_NAME, user.getSessionId()).execute();
             loginInfo = JSON.parseObject(response.body()).toJavaObject(LoginResponseInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -136,18 +135,7 @@ public class CquptCrawler {
      * @return 下载的id
      */
     public static int createChineseTranscripts(URLConfig netType, User user) {
-        int downloadId = -1;
-        try {
-            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.CREATE_CHINESE_TRANSCRIPTS.getUrl() + user.getSno())
-                    .method(Connection.Method.GET)
-                    .cookie(JWZX_SESSIONID_NAME, user.getSessionId())
-                    .execute();
-            String str = response.body();
-            downloadId = Integer.parseInt(str.substring(str.indexOf("id="), str.lastIndexOf("'")).split("=")[1]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return downloadId;
+        return createChineseTranscripts(netType, user.getSno(), user.getSessionId());
     }
 
     /**
@@ -174,32 +162,63 @@ public class CquptCrawler {
     }
 
     /**
-     * 下载成绩单
+     * 生成学籍证明
+     * @param netType
+     * @param user
+     * @return
+     */
+    public static int createStudentStatusProof(URLConfig netType, User user) {
+        return createStudentStatusProof(netType, user.getSno(), user.getSessionId());
+    }
+
+
+    /**
+     * 生成学籍证明
+     * @param netType
+     * @param sno
+     * @param sessionId
+     * @return
+     */
+    public static int createStudentStatusProof(URLConfig netType, int sno, String sessionId) {
+        int downloadId = -1;
+        try {
+            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.CREATE_STUDENT_STATUS_PROOF.getUrl() + sno)
+                    .method(Connection.Method.GET)
+                    .cookie(JWZX_SESSIONID_NAME, sessionId)
+                    .execute();
+            String str = response.body();
+            System.out.println(str);
+            downloadId = Integer.parseInt(str.substring(str.indexOf("id="), str.lastIndexOf("'")).split("=")[1]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return downloadId;
+    }
+
+    /**
+     * 下载证明
      * @param netType
      * @param user
      * @param downloadId 下载的id
      * @param dir
      */
-    public static void downloadChineseTranscripts(URLConfig netType, User user, int downloadId, String dir) {
-        downloadChineseTranscripts(netType, user.getSessionId(), downloadId, dir);
+    public static void downloadProof(URLConfig netType, User user, int downloadId, String dir) {
+        downloadProof(netType, user.getSessionId(), downloadId, dir);
     }
 
     /**
-     * 下载成绩单, 可以下载其他人的成绩单
+     * 下载证明
      * @param netType
      * @param downloadId 下载的id
      * @param dir
      */
-    public static void downloadChineseTranscripts(URLConfig netType, String sessionId, int downloadId, String dir) {
+    public static void downloadProof(URLConfig netType, String sessionId, int downloadId, String dir) {
         try {
-            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.DOWNLOAD_CHINESE_TRANSCRIPTS.getUrl() + downloadId)
+            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.DOWNLOAD_PROOF.getUrl() + downloadId)
                     .method(Connection.Method.GET)
                     .cookie(JWZX_SESSIONID_NAME, sessionId)
                     .ignoreContentType(true)
                     .execute();
-            response.headers().forEach((key, value) -> {
-                System.out.println(key + ":" + value);
-            });
             String filename = response.header("Content-Disposition").split(";")[1].split("=")[1];
             BufferedInputStream bin = response.bodyStream();
             FileOutputStream fout = new FileOutputStream(dir + File.separator + filename);
@@ -215,15 +234,30 @@ public class CquptCrawler {
     }
 
     /**
-     * 下载成绩单 不需要downloadId
+     * 下载成绩单
      * @param netType
      * @param user
      * @param dir
      */
     public static void downloadChineseTranscripts(URLConfig netType, User user, String dir) {
-        int downloadId = createChineseTranscripts(netType, user);
+        int downloadId = createChineseTranscripts(netType, user.getSno(), user.getSessionId());
         if (downloadId != -1) {
-            downloadChineseTranscripts(netType, user, downloadId, dir);
+            downloadProof(netType, user.getSessionId(), downloadId, dir);
+        }
+    }
+
+
+    /**
+     * 下载学籍证明
+     * @param netType
+     * @param sno
+     * @param sessionId
+     * @param dir
+     */
+    public static void downloadStudentStatusProof(URLConfig netType, int sno, String sessionId, String dir) {
+        int downloadId = createStudentStatusProof(netType, sno, sessionId);
+        if (downloadId != -1) {
+            downloadProof(netType, sessionId, downloadId, dir);
         }
     }
 

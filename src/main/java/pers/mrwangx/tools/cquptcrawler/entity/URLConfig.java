@@ -8,16 +8,17 @@ package pers.mrwangx.tools.cquptcrawler.entity;
 public enum URLConfig {
 
 
-    LAN("http://jwzx.cqupt.edu.cn"),
-    WAN("http://jwzx.cquptx.cn"),
-    COURSE("/kebiao/kb_stu.php?xh="),
-    STUMES("/data/json_StudentSearch.php"),
-    LOGIN("/checkLogin.php"),
-    VIMG("/createValidationCode.php"),
-    JWZX_SESSIONID("/login.php"),
-    CREATE_CHINESE_TRANSCRIPTS("/dzzm/stuCjZw.php?xh="),
-    DOWNLOAD_CHINESE_TRANSCRIPTS("/dzzm/downLoad.php?id="),
-    STUPIC("/showstupic.php?xh=");
+    LAN("http://jwzx.cqupt.edu.cn"),                                                        //教务在线内网地址
+    WAN("http://jwzx.cquptx.cn"),                                                           //外网地址
+    COURSE("/kebiao/kb_stu.php?xh="),                                                       //课表
+    STUMES("/data/json_StudentSearch.php"),                                                 //学生信息接口
+    LOGIN("/checkLogin.php"),                                                               //登录接口
+    VIMG("/createValidationCode.php"),                                                      //验证码接口
+    JWZX_SESSIONID("/login.php"),                                                           //访问获取session
+    CREATE_CHINESE_TRANSCRIPTS("/dzzm/stuCjZw.php?xh="),                                    //生成成绩单
+    CREATE_STUDENT_STATUS_PROOF("/dzzm/stuXj.php?xh="),                                     //生成学籍证明
+    DOWNLOAD_PROOF("/dzzm/downLoad.php?id="),                                               //下载证明接口
+    STUPIC("/showstupic.php?xh=");                                                          //学生图片
 
     private String url;
 
