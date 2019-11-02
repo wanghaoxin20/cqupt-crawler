@@ -1,6 +1,7 @@
 package pers.mrwangx.tools.cquptcrawler.entity;
 
 import com.alibaba.fastjson.JSONObject;
+import pers.mrwangx.tools.cquptcrawler.annotation.Display;
 
 /****
  * @author:MrWangx
@@ -9,29 +10,29 @@ import com.alibaba.fastjson.JSONObject;
  *****/
 public class Student {
 
-
+    @Display("学号")
     private String sno;         //学号
-
+    @Display("姓名")
     private String name;        //姓名
-
+    @Display("性别")
     private String sex;         //性别
-
+    @Display("民族")
     private String nation;      //民族
-
+    @Display("生日")
     private String birthday;    //生日
-
+    @Display("入学日期")
     private String rxrq;        //入学日期
-
+    @Display("年级")
     private String grade;       //年级
-
+    @Display("班级代号")
     private String classid;     //班级代号
-
+    @Display("学院名")
     private String collegename; //学院名
-
+    @Display("学院号")
     private String collegeid;   //学院号
-
+    @Display("专业名")
     private String majorname;   //专业名
-
+    @Display(value = "专业号")
     private String majorid;     //专业号
 
     @Override
@@ -83,7 +84,6 @@ public class Student {
         setMajorname(json.getString("zym"));
         setMajorid(json.getString("zyh"));
     }
-
 
     public String getSno() {
         return sno;

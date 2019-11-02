@@ -1,5 +1,7 @@
 package pers.mrwangx.tools.cquptcrawler.entity.jwzx;
 
+import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+
 /**
  * \* Author: MrWangx
  * \* Date: 2019/10/30
@@ -10,7 +12,9 @@ package pers.mrwangx.tools.cquptcrawler.entity.jwzx;
  **/
 public class LoginResponseInfo {
 
+    @Display("code")
     private int code;
+    @Display("info")
     private String info;
 
     public int getCode() {

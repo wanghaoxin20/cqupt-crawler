@@ -1,5 +1,7 @@
 package pers.mrwangx.tools.cquptcrawler.entity.jwzx;
 
+import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+
 /**
  * \* Author: MrWangx
  * \* Date: 2019/10/30
@@ -8,8 +10,11 @@ package pers.mrwangx.tools.cquptcrawler.entity.jwzx;
  **/
 public class User {
 
+    @Display("学号")
     private int sno;
+    @Display("密码")
     private String pwd;
+    @Display("会话SessionId")
     private String sessionId;
 
     public User() {}

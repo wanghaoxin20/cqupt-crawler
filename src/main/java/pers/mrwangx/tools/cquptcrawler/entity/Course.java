@@ -1,5 +1,7 @@
 package pers.mrwangx.tools.cquptcrawler.entity;
 
+import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,15 +12,24 @@ import java.util.List;
  *****/
 public class Course {
 
+    @Display("课程标识")
     private String courseNo;          //该节课编号
+    @Display("课程名")
     private String id_name;     //课程号和名字
+    @Display("上课地点")
     private String place;       //上课地点
     private List<Integer> weeks;       //上课的周数
+    @Display("上课节数")
     private String length;      //一节课的长度
+    @Display("上课老师")
     private String teacher;     //上课老师
+    @Display("课程类型")
     private String type;        //选修或者必修
+    @Display("学分")
     private String credit;      //学分
+    @Display(value = "星期", display = false)
     private int weekday;        //星期几
+    @Display(value = "第几节课", display = false)
     private int coursenum;      //第几节课
 
     @Override
@@ -27,7 +38,7 @@ public class Course {
                 "no='" + courseNo + '\'' +
                 ", id_name='" + id_name + '\'' +
                 ", place='" + place + '\'' +
-                ", weeks=" + getWeeksString() +
+                ", weeks=" + getWeeks() +
                 ", length='" + length + '\'' +
                 ", teacher='" + teacher + '\'' +
                 ", type='" + type + '\'' +
@@ -80,7 +91,8 @@ public class Course {
         return weeks;
     }
 
-    public String getWeeksString() {
+    @Display("上课周数")
+    public String getWeeks() {
         StringBuffer sb = new StringBuffer();
         for (Integer w : weeks) {
             sb.append(w + ",");
@@ -175,5 +187,154 @@ public class Course {
 
     public void setCoursenum(int coursenum) {
         this.coursenum = coursenum;
+    }
+
+
+
+    public static class Student {
+        @Display("学号")
+        private String sno;         //学号
+        @Display("姓名")
+        private String name;        //姓名
+        @Display("性别")
+        private String sex;         //性别
+        @Display("班级")
+        private String classid;     //班级
+        @Display("专业号")
+        private String majorid;     //专业号
+        @Display("专业名")
+        private String majorname;   //专业名
+        @Display("学院名")
+        private String collegename; //学院名
+        @Display("年级")
+        private String grade;       //年级
+        @Display("学籍状态")
+        private String xjzt;        //学籍状态
+        @Display("选课状态")
+        private String xkzt;        //选课状态
+        @Display("课程类别")
+        private String kclb;        //课程类别
+
+        public Student() {
+        }
+
+        public Student(String sno, String name, String sex, String classid, String majorid, String majorname, String collegename, String grade, String xjzt, String xkzt, String kclb) {
+            this.sno = sno;
+            this.name = name;
+            this.sex = sex;
+            this.classid = classid;
+            this.majorid = majorid;
+            this.majorname = majorname;
+            this.collegename = collegename;
+            this.grade = grade;
+            this.xjzt = xjzt;
+            this.xkzt = xkzt;
+            this.kclb = kclb;
+        }
+
+        @Override
+        public String toString() {
+            return "Student{" +
+                    "sno='" + sno + '\'' +
+                    ", name='" + name + '\'' +
+                    ", sex='" + sex + '\'' +
+                    ", classid='" + classid + '\'' +
+                    ", majorid='" + majorid + '\'' +
+                    ", majorname='" + majorname + '\'' +
+                    ", collegename='" + collegename + '\'' +
+                    ", grade='" + grade + '\'' +
+                    ", xjzt='" + xjzt + '\'' +
+                    ", xkzt='" + xkzt + '\'' +
+                    ", kclb='" + kclb + '\'' +
+                    '}';
+        }
+
+        public String getSno() {
+            return sno;
+        }
+
+        public void setSno(String sno) {
+            this.sno = sno;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public String getClassid() {
+            return classid;
+        }
+
+        public void setClassid(String classid) {
+            this.classid = classid;
+        }
+
+        public String getMajorid() {
+            return majorid;
+        }
+
+        public void setMajorid(String majorid) {
+            this.majorid = majorid;
+        }
+
+        public String getMajorname() {
+            return majorname;
+        }
+
+        public void setMajorname(String majorname) {
+            this.majorname = majorname;
+        }
+
+        public String getCollegename() {
+            return collegename;
+        }
+
+        public void setCollegename(String collegename) {
+            this.collegename = collegename;
+        }
+
+        public String getGrade() {
+            return grade;
+        }
+
+        public void setGrade(String grade) {
+            this.grade = grade;
+        }
+
+        public String getXjzt() {
+            return xjzt;
+        }
+
+        public void setXjzt(String xjzt) {
+            this.xjzt = xjzt;
+        }
+
+        public String getXkzt() {
+            return xkzt;
+        }
+
+        public void setXkzt(String xkzt) {
+            this.xkzt = xkzt;
+        }
+
+        public String getKclb() {
+            return kclb;
+        }
+
+        public void setKclb(String kclb) {
+            this.kclb = kclb;
+        }
     }
 }

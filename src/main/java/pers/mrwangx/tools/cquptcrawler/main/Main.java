@@ -2,9 +2,11 @@ package pers.mrwangx.tools.cquptcrawler.main;
 
 import org.apache.commons.cli.*;
 import pers.mrwangx.tools.cquptcrawler.CquptCrawler;
+import pers.mrwangx.tools.cquptcrawler.entity.ListCourse;
 import pers.mrwangx.tools.cquptcrawler.entity.StuCourses;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -20,6 +22,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         Options options = createCommandOptions();
+        String lineSeparator = System.lineSeparator();
 
         CommandLineParser parser = new DefaultParser();
         CommandLine line = null;
@@ -73,11 +76,43 @@ public class Main {
                                 weekday = Integer.parseInt(values[2]);
                                 coursenum = Integer.parseInt(values[3]);
                             }
+                            ListCourse listCourse = searchCourse(sno, netType).getCourse(schoolweek, weekday, coursenum);
                             System.out.println(
                                     String.format("%d周星期%d第%d节课", schoolweek, weekday, coursenum) + System.lineSeparator() +
                                             "**********************************" + System.lineSeparator() +
-                                            listCourseDisplay(searchCourse(sno, netType).getCourse(schoolweek, weekday, coursenum))
+                                            listCourseDisplay(listCourse)
                             );
+
+
+                            if (line.hasOption("css")) {
+                                URLConfig finalNetType = netType;
+                                listCourse.getCourses().forEach(cs -> {
+                                    System.out.println("+--------------------------+" + lineSeparator +
+                                                        cs.getCourseNo() + "学生名单" + lineSeparator +
+                                                       "+--------------------------+"
+                                             );
+                                    StringBuilder builder = new StringBuilder();
+                                    studentOfCourse(finalNetType, cs.getCourseNo()).forEach(
+                                            stu -> {
+                                                builder.append(display(stu) + lineSeparator + "-------------------------------------" + lineSeparator);
+                                            }
+                                    );
+                                    System.out.println(builder);
+                                });
+                            }
+
+                            if (line.hasOption("d")) {
+                                File dir = new File(line.getOptionValue("d"));
+                                if (!dir.exists()) {
+                                    System.out.println(String.format("指定文件夹[%s]不存在", dir.getAbsolutePath()));
+                                } else {
+                                    URLConfig finalNetType1 = netType;
+                                    listCourse.getCourses().forEach(cs -> {
+                                        CquptCrawler.downloadStudentsOfCourseExcel(finalNetType1, cs.getCourseNo(), dir.getAbsolutePath());
+                                    });
+                                }
+                            }
+
                         }
                     } catch (NumberFormatException e) {
                         System.out.println("参数不正确:" + e.getMessage());
@@ -104,6 +139,7 @@ public class Main {
                 .build();
 
         Option nt = Option.builder("nt")
+                .longOpt("nettype")
                 .required(false)
                 .argName("netType")
                 .hasArg()
@@ -111,6 +147,7 @@ public class Main {
                 .build();
 
         Option stu = Option.builder("stu")
+                .longOpt("student")
                 .argName("keyword")
                 .numberOfArgs(1)
                 .type(String.class)
@@ -118,6 +155,7 @@ public class Main {
                 .build();
 
         Option cs = Option.builder("cs")
+                .longOpt("course")
                 .argName("params...")
                 .hasArgs()
                 .desc(
@@ -134,10 +172,27 @@ public class Main {
                 .build();
 
         Option scs = Option.builder("scs")
+                .longOpt("showcourse")
                 .argName("stuno")
                 .hasArg()
                 .desc(
                         "显示所有课程信息，参数为学号"
+                )
+                .build();
+
+        Option css = Option.builder("css")
+                .hasArg(false)
+                .desc(
+                        "显示该节课的学生名单, 需要与cs一起用"
+                )
+                .build();
+
+        Option d = Option.builder("d")
+                .argName("directory")
+                .hasArg()
+                .longOpt("donwload")
+                .desc(
+                        "下载"
                 )
                 .build();
 
@@ -146,6 +201,8 @@ public class Main {
         options.addOption(stu);
         options.addOption(cs);
         options.addOption(scs);
+        options.addOption(css);
+        options.addOption(d);
 
         return options;
     }

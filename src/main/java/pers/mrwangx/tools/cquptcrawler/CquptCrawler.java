@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import pers.mrwangx.tools.cquptcrawler.annotation.Display;
 import pers.mrwangx.tools.cquptcrawler.entity.*;
 import pers.mrwangx.tools.cquptcrawler.entity.jwzx.LoginResponseInfo;
 import pers.mrwangx.tools.cquptcrawler.entity.jwzx.User;
@@ -21,6 +22,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,7 +157,6 @@ public class CquptCrawler {
                     .cookie(JWZX_SESSIONID_NAME, sessionId)
                     .execute();
             String str = response.body();
-            System.out.println(str);
             downloadId = Integer.parseInt(str.substring(str.indexOf("id="), str.lastIndexOf("'")).split("=")[1]);
         } catch (IOException e) {
             e.printStackTrace();
@@ -195,31 +198,37 @@ public class CquptCrawler {
         return downloadId;
     }
 
-    /**
-     * 下载证明
-     * @param netType
-     * @param user
-     * @param downloadId 下载的id
-     * @param dir
-     */
-    public static void downloadProof(URLConfig netType, User user, int downloadId, String dir) {
-        downloadProof(netType, user.getSessionId(), downloadId, dir);
-    }
 
     /**
-     * 下载证明
+     * 下载证明 sessionId可以不需要
      * @param netType
+     * @param sessionId
      * @param downloadId 下载的id
      * @param dir
      */
     public static void downloadProof(URLConfig netType, String sessionId, int downloadId, String dir) {
+       download(netType.getUrl() + URLConfig.PROOF_DOWNLOAD.getUrl() + downloadId, sessionId, dir);
+    }
+
+    public static void downloadStudentsOfCourseExcel(URLConfig netType, String courseNo, String dir) {
+        download(netType.getUrl() + URLConfig.COURSE_LIST_OF_STUDENTS_DOWNLOAD.getUrl() + courseNo, "", dir);
+    }
+
+    /**
+     * 下载文件
+     * @param url
+     * @param sessionId
+     * @param dir
+     */
+    public static void download(String url, String sessionId, String dir) {
         try {
-            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.DOWNLOAD_PROOF.getUrl() + downloadId)
+            Connection.Response response = Jsoup.connect(url)
                     .method(Connection.Method.GET)
                     .cookie(JWZX_SESSIONID_NAME, sessionId)
                     .ignoreContentType(true)
                     .execute();
             String filename = response.header("Content-Disposition").split(";")[1].split("=")[1];
+            filename = filename.replaceAll("(^\\\")|(\\\"$)", "");
             BufferedInputStream bin = response.bodyStream();
             FileOutputStream fout = new FileOutputStream(dir + File.separator + filename);
             byte[] data = new byte[1024];
@@ -356,6 +365,34 @@ public class CquptCrawler {
         return stuCourses;
     }
 
+    public static List<Course.Student> studentOfCourse(URLConfig netType, String courseNo) {
+        List<Course.Student> students = new ArrayList<>();
+        try {
+            Document doc = Jsoup.connect(netType.getUrl() + URLConfig.COURSE_LIST_OF_STUDENTS.getUrl() + courseNo).get();
+            Elements trs = doc.select("tbody tr");
+            trs.forEach(tr -> {
+                Course.Student stu = new Course.Student();
+                Elements tds = tr.select("td");
+                stu.setSno(tds.get(1).text());
+                stu.setName(tds.get(2).text());
+                stu.setSex(tds.get(3).text());
+                stu.setClassid(tds.get(4).text());
+                stu.setMajorid(tds.get(5).text());
+                stu.setMajorname(tds.get(6).text());
+                stu.setCollegename(tds.get(7).text());
+                stu.setGrade(tds.get(8).text());
+                stu.setXjzt(tds.get(9).text());
+                stu.setXkzt(tds.get(10).text());
+                stu.setKclb(tds.get(11).text());
+                students.add(stu);
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
+
     /**
      * 获取当前周数
      *
@@ -395,6 +432,7 @@ public class CquptCrawler {
                 "老师:" + course.getTeacher() + lineSeparator +
                 "学分:" + course.getCredit() + lineSeparator +
                 course.getPlace() + lineSeparator +
+                "课程标识:" + course.getCourseNo() + lineSeparator +
                 "上课节数:" + course.getLength() + lineSeparator +
                 "上课周数:" + courseWeek +
                 "课程类型:" + course.getType()
@@ -476,6 +514,78 @@ public class CquptCrawler {
                         "专业名:" + student.getMajorname() + lineSeparator +
                         "专业号:" + student.getMajorid()
                 ;
+    }
+
+    /**
+     * @param student
+     * @return
+     */
+    public static String studentDisplay(Course.Student student) {
+        if (student == null) {
+            return null;
+        }
+        String lineSeparator = System.lineSeparator();
+        return
+                "学号:" + student.getSno() + lineSeparator +
+                        "姓名:" + student.getName() + lineSeparator +
+                        "性别:" + student.getSex() + lineSeparator +
+                        "年级:" + student.getGrade() + lineSeparator +
+                        "班级:" + student.getClassid() + lineSeparator +
+                        "专业号:" + student.getMajorid() + lineSeparator +
+                        "专业名:" + student.getMajorname() + lineSeparator +
+                        "学院:" + student.getCollegename() + lineSeparator +
+                        "年级" + student.getGrade() + lineSeparator +
+                        "学籍状态" + student.getXjzt() + lineSeparator +
+                        "选课状态" + student.getXkzt() + lineSeparator +
+                        "课程类别" + student.getKclb()
+                ;
+    }
+
+    /**
+     * 输出
+     * @param o
+     * @return
+     */
+    public static String display(Object o) {
+        StringBuilder builder = new StringBuilder();
+        Class clazz = o.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        int len = fields.length;
+        for (int i = 0; i < len; i++) {
+            Field f = fields[i];
+            f.setAccessible(true);
+            String lineSeparator = i == len - 1 ? "" : System.lineSeparator();
+            try {
+                if (f.isAnnotationPresent(Display.class)) {
+                    Display dis = f.getAnnotation(Display.class);
+                    if (dis.display()) {
+                        String name = dis.value().equals("") ? f.getName()  : dis.value();
+                        builder.append(name + ":" + f.get(o) + lineSeparator);
+                    }
+                } else {
+                    String fieldName = f.getName();
+                    fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+                    try {
+                        Method m = clazz.getMethod("get" + fieldName);
+                        if (m.isAnnotationPresent(Display.class)) {
+                            Display dis = m.getAnnotation(Display.class);
+                            if (dis.display()) {
+                                String name = dis.value().equals("") ? f.getName()  : dis.value();
+                                builder.append(name + ":" + m.invoke(o) + lineSeparator);
+                            }
+                        }
+                    } catch (NoSuchMethodException e) {
+                        continue;
+                    } catch (InvocationTargetException e) {
+                        throw e;
+                    }
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+        return builder.toString();
     }
 
 
