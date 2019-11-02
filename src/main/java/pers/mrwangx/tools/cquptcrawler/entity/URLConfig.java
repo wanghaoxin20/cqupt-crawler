@@ -13,6 +13,7 @@ public enum URLConfig {
     COURSE("/kebiao/kb_stu.php?xh="),                                                       //课表
     COURSE_LIST_OF_STUDENTS("/kebiao/kb_stuList.php?jxb="),                                 //选课学生名单
     COURSE_LIST_OF_STUDENTS_DOWNLOAD("/kebiao/ExcelDownloadXsmd.php?jxb="),                 //选课学生名单下载
+    EMPTY_ROOM("/kebiao/emptyRoomSearch.php"),                                              //空教室查询
     STUMES("/data/json_StudentSearch.php"),                                                 //学生信息接口
     LOGIN("/checkLogin.php"),                                                               //登录接口
     VIMG("/createValidationCode.php"),                                                      //验证码接口

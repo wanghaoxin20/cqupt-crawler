@@ -3,12 +3,14 @@ package pers.mrwangx.tools.cquptcrawler.main;
 import org.apache.commons.cli.*;
 import pers.mrwangx.tools.cquptcrawler.CquptCrawler;
 import pers.mrwangx.tools.cquptcrawler.entity.ListCourse;
+import pers.mrwangx.tools.cquptcrawler.entity.Room;
 import pers.mrwangx.tools.cquptcrawler.entity.StuCourses;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 import static pers.mrwangx.tools.cquptcrawler.CquptCrawler.*;
 
@@ -45,7 +47,7 @@ public class Main {
                         netType = URLConfig.LAN;
                     } else {
                         System.out.println("网络类型只能为lan或者wan");
-                        return ;
+                        return;
                     }
                 }
 
@@ -88,9 +90,9 @@ public class Main {
                                 URLConfig finalNetType = netType;
                                 listCourse.getCourses().forEach(cs -> {
                                     System.out.println("+--------------------------+" + lineSeparator +
-                                                        cs.getCourseNo() + "学生名单" + lineSeparator +
-                                                       "+--------------------------+"
-                                             );
+                                            cs.getCourseNo() + "学生名单" + lineSeparator +
+                                            "+--------------------------+"
+                                    );
                                     StringBuilder builder = new StringBuilder();
                                     studentOfCourse(finalNetType, cs.getCourseNo()).forEach(
                                             stu -> {
@@ -118,14 +120,37 @@ public class Main {
                         System.out.println("参数不正确:" + e.getMessage());
                     }
                 } else if (line.hasOption("scs")) {
-                  String value = line.getOptionValue("scs");
+                    String value = line.getOptionValue("scs");
                     StuCourses stuCourses = CquptCrawler.searchCourse(Integer.parseInt(value), netType);
                     System.out.println(CquptCrawler.stuCoursesDisplay(stuCourses));
+                } else if (line.hasOption("er")) {
+                    String[] value = line.getOptionValues("er");
+                    int weekStart = value[0].equals("crt") ? currentSchoolWeek(netType) : Integer.parseInt(value[0]);
+                    int weekEnd = value[1].equals("crt") ? currentSchoolWeek(netType) : Integer.parseInt(value[1]);
+                    int weekday = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+                    weekday = weekday == 0 ? 7 : weekday - 1;
+                    weekday = value[2].equals("crt") ? weekday : Integer.parseInt(value[2]);
+                    String[] strs = value[3].split(",");
+                    int[] courseNums = new int[strs.length];
+                    for (int i = 0; i < strs.length; i++) {
+                        courseNums[i] = Integer.parseInt(strs[i]);
+                    }
+                    StringBuilder builder = new StringBuilder();
+                    List<Room> rooms = searchEmptyRoom(netType, weekStart, weekEnd, weekday, courseNums);
+                    System.out.println("+---------------------------------------+" + lineSeparator +
+                            weekStart + "-" + weekEnd + "星期" + weekday + "第" + value[3] + "节课" + "空教室情况:" + lineSeparator +
+                            "共" + rooms.size() + "个教室可用" + lineSeparator +
+                            "+---------------------------------------+");
+                    rooms.forEach(r -> {
+                        builder.append(CquptCrawler.display(r) + lineSeparator + "---------------------------" + lineSeparator);
+                    });
+                    System.out.println(builder.toString());
+                } else if (line.hasOption("wk")) {
+                    System.out.println("当前学校周数:第" + currentSchoolWeek(netType) + "周");
                 } else if (line.hasOption("h")) {
                     HelpFormatter helpFormatter = new HelpFormatter();
                     helpFormatter.printHelp("cqupt-crawler", options);
                 }
-
             }
         }
     }
@@ -196,6 +221,22 @@ public class Main {
                 )
                 .build();
 
+        Option er = Option.builder("er")
+                .argName("params...")
+                .numberOfArgs(4)
+                .longOpt("emptyroom")
+                .desc(
+                        "查找空教室, crt为当前的周数或者星期数" + System.lineSeparator() +
+                                "weekStart weekEnd weekday courseNums(split with ,)"
+                )
+                .build();
+
+        Option wk = Option.builder("wk")
+                .hasArg(false)
+                .longOpt("week")
+                .desc("当前学校周数")
+                .build();
+
         options.addOption(help);
         options.addOption(nt);
         options.addOption(stu);
@@ -203,6 +244,8 @@ public class Main {
         options.addOption(scs);
         options.addOption(css);
         options.addOption(d);
+        options.addOption(er);
+        options.addOption(wk);
 
         return options;
     }

@@ -1,6 +1,5 @@
 package pers.mrwangx.tools.cquptcrawler;
 
-import com.alibaba.fastjson.JSON;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
 import pers.mrwangx.tools.cquptcrawler.entity.jwzx.User;
 
@@ -8,6 +7,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+
+import static pers.mrwangx.tools.cquptcrawler.CquptCrawler.*;
 
 /**
  * \* Author: MrWangx
@@ -54,8 +55,16 @@ public class Test {
         }
     }
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws Exception {
+//        List<Room> rooms = CquptCrawler.searchEmptyRoom(URLConfig.LAN, 1, 1, 1, 1);
+//        System.out.println(rooms.size());
+//        rooms.forEach(r -> {
+//            System.out.println(CquptCrawler.display(r) + System.lineSeparator() + "-------------------");
+//        });
+        User user = new User();
+        user.setSno(2016211995);
+        user.setPwd("123456;");
+        System.out.println(display(JWZXLogin(URLConfig.LAN, user)));
     }
 
 

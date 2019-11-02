@@ -15,8 +15,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Display {
 
+
     String value() default "";
 
     boolean display() default true;
+
+
+    @Target({ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Separator {
+        String value();
+    }
 
 }

@@ -1,9 +1,11 @@
 pers\mrwangx\tools\cquptcrawler\entity\jwzx\LoginResponseInfo.class
+pers\mrwangx\tools\cquptcrawler\entity\Room.class
 pers\mrwangx\tools\cquptcrawler\entity\ListCourse.class
 pers\mrwangx\tools\cquptcrawler\entity\Student.class
 pers\mrwangx\tools\cquptcrawler\entity\Course.class
 pers\mrwangx\tools\cquptcrawler\CquptCrawler.class
 pers\mrwangx\tools\cquptcrawler\entity\Course$Student.class
+pers\mrwangx\tools\cquptcrawler\annotation\Display$Separator.class
 pers\mrwangx\tools\cquptcrawler\main\Main.class
 pers\mrwangx\tools\cquptcrawler\entity\jwzx\User.class
 pers\mrwangx\tools\cquptcrawler\entity\StuCourses.class

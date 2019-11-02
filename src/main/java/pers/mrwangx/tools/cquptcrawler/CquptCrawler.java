@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * \* Author: MrWangx
@@ -64,6 +65,46 @@ public class CquptCrawler {
             e.printStackTrace();
         }
         return list;
+    }
+
+
+    /**
+     * 查找空教室
+     * @param netType
+     * @param weekStart
+     * @param weekEnd
+     * @param weekday
+     * @param courseNums
+     * @return
+     */
+    public static List<Room> searchEmptyRoom(URLConfig netType, int weekStart, int weekEnd, int weekday, int... courseNums) {
+        List<Room> rooms = new ArrayList<>();
+        String courseNumStr = "";
+        for (int i = 0; i < courseNums.length; i++) {
+            String end = "&";
+            if (i == courseNums.length - 1) {
+                end = "";
+            }
+            courseNumStr += "sd[]=" + courseNums[i] * 2 + end;
+        }
+        Connection connection = Jsoup.connect(netType.getUrl() + URLConfig.EMPTY_ROOM.getUrl() + "?" + courseNumStr + "&"
+                + "zcStart=" + weekStart + "&"
+                + "zcEnd=" + weekEnd + "&"
+                + "xq=" + weekday + "&"
+        );
+        try {
+            Document doc = connection.get();
+            Elements tds = doc.select("tbody td");
+            tds.forEach(td -> {
+                String[] text = td.text().split(" ");
+                String name = text[0];
+                int capatity = Integer.parseInt(text[1].replaceAll("(^[(])|([)]$)", ""));
+                rooms.add(new Room(name, capatity));
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rooms;
     }
 
     /**
@@ -113,6 +154,19 @@ public class CquptCrawler {
         return ans.toString();
     }
 
+
+    /**
+     * 登录教务在线
+     * @param netType
+     * @param user
+     * @return
+     */
+    public static LoginResponseInfo JWZXLogin(URLConfig netType, User user) {
+        user.setSessionId(getJWZXSessionId(netType));
+        String vcode = vCodeInput(netType, user.getSessionId());
+        return JWZXLogin(netType, user, vcode);
+    }
+
     /**
      * 登录教务在线
      * @param netType
@@ -124,7 +178,10 @@ public class CquptCrawler {
         LoginResponseInfo loginInfo = null;
         try {
             System.out.println(String.format("登录{sno:%s, pwd:%s, vCode:%s}", user.getSno(), user.getPwd(), vCode));
-            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.LOGIN.getUrl()).method(Connection.Method.POST).data("name", user.getSno() + "").data("password", user.getPwd()).data("vCode", vCode).cookie(JWZX_SESSIONID_NAME, user.getSessionId()).execute();
+            Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.LOGIN.getUrl()).method(Connection.Method.POST)
+                    .data("name", user.getSno() + "")
+                    .data("password", user.getPwd())
+                    .data("vCode", vCode).cookie(JWZX_SESSIONID_NAME, user.getSessionId()).execute();
             loginInfo = JSON.parseObject(response.body()).toJavaObject(LoginResponseInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
@@ -550,11 +607,16 @@ public class CquptCrawler {
         StringBuilder builder = new StringBuilder();
         Class clazz = o.getClass();
         Field[] fields = clazz.getDeclaredFields();
+        String lineSeparator = System.lineSeparator();
+        if (clazz.isAnnotationPresent(Display.Separator.class)) {
+            Display.Separator s = (Display.Separator) clazz.getAnnotation(Display.Separator.class);
+            lineSeparator = s.value();
+        }
         int len = fields.length;
         for (int i = 0; i < len; i++) {
             Field f = fields[i];
             f.setAccessible(true);
-            String lineSeparator = i == len - 1 ? "" : System.lineSeparator();
+            lineSeparator = i == len - 1 ? "" : lineSeparator;
             try {
                 if (f.isAnnotationPresent(Display.class)) {
                     Display dis = f.getAnnotation(Display.class);
