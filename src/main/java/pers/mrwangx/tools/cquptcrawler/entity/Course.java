@@ -1,6 +1,6 @@
 package pers.mrwangx.tools.cquptcrawler.entity;
 
-import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+import pers.mrwangx.commons.tool.display.annotation.Display;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,41 +12,25 @@ import java.util.List;
  *****/
 public class Course {
 
-    @Display("课程标识")
+    @Display(value = "课程标识", order = 0)
     private String courseNo;          //该节课编号
-    @Display("课程名")
+    @Display(value = "课程名", order = 1)
     private String id_name;     //课程号和名字
-    @Display("上课地点")
+    @Display(value = "上课地点", order = 2)
     private String place;       //上课地点
     private List<Integer> weeks;       //上课的周数
-    @Display("上课节数")
+    @Display(value = "上课节数", order = 4)
     private String length;      //一节课的长度
-    @Display("上课老师")
+    @Display(value = "上课老师", order = 5)
     private String teacher;     //上课老师
-    @Display("课程类型")
+    @Display(value = "课程类型", order = 6)
     private String type;        //选修或者必修
-    @Display("学分")
+    @Display(value = "学分", order = 7)
     private String credit;      //学分
     @Display(value = "星期", display = false)
     private int weekday;        //星期几
     @Display(value = "第几节课", display = false)
     private int coursenum;      //第几节课
-
-    @Override
-    public String toString() {
-        return "Course{" +
-                "no='" + courseNo + '\'' +
-                ", id_name='" + id_name + '\'' +
-                ", place='" + place + '\'' +
-                ", weeks=" + getWeeks() +
-                ", length='" + length + '\'' +
-                ", teacher='" + teacher + '\'' +
-                ", type='" + type + '\'' +
-                ", credit='" + credit + '\'' +
-                ", weekday=" + weekday +
-                ", coursenum=" + coursenum +
-                '}';
-    }
 
     public Course() {}
 
@@ -91,8 +75,12 @@ public class Course {
         return weeks;
     }
 
-    @Display("上课周数")
-    public String getWeeks() {
+    public List<Integer> getWeeks() {
+        return this.weeks;
+    }
+
+    @Display(value = "上课周数", order = 3)
+    public String weeksString() {
         StringBuffer sb = new StringBuffer();
         for (Integer w : weeks) {
             sb.append(w + ",");

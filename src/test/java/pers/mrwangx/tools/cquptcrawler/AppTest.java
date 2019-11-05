@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.junit.Ignore;
 import org.junit.Test;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
-import pers.mrwangx.tools.cquptcrawler.entity.jwzx.User;
+import pers.mrwangx.tools.cquptcrawler.jwzx.User;
 
 
 /**

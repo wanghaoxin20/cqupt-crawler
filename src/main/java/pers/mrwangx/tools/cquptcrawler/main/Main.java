@@ -6,6 +6,7 @@ import pers.mrwangx.tools.cquptcrawler.entity.ListCourse;
 import pers.mrwangx.tools.cquptcrawler.entity.Room;
 import pers.mrwangx.tools.cquptcrawler.entity.StuCourses;
 import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
+import pers.mrwangx.tools.cquptcrawler.jwzx.Jwzx;
 
 import java.io.File;
 import java.io.IOException;
@@ -147,7 +148,11 @@ public class Main {
                     System.out.println(builder.toString());
                 } else if (line.hasOption("wk")) {
                     System.out.println("当前学校周数:第" + currentSchoolWeek(netType) + "周");
-                } else if (line.hasOption("h")) {
+                } else if (line.hasOption("jwzx")) {
+                    Jwzx jwzx = new Jwzx(URLConfig.LAN);
+                    jwzx.run();
+                }
+                else if (line.hasOption("h")) {
                     HelpFormatter helpFormatter = new HelpFormatter();
                     helpFormatter.printHelp("cqupt-crawler", options);
                 }
@@ -237,6 +242,11 @@ public class Main {
                 .desc("当前学校周数")
                 .build();
 
+        Option jwzx = Option.builder("jwzx")
+                .hasArg(false)
+                .desc("教务在线")
+                .build();
+
         options.addOption(help);
         options.addOption(nt);
         options.addOption(stu);
@@ -246,6 +256,7 @@ public class Main {
         options.addOption(d);
         options.addOption(er);
         options.addOption(wk);
+        options.addOption(jwzx);
 
         return options;
     }

@@ -1,6 +1,6 @@
-package pers.mrwangx.tools.cquptcrawler.entity.jwzx;
+package pers.mrwangx.tools.cquptcrawler.jwzx;
 
-import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+import pers.mrwangx.commons.tool.display.annotation.Display;
 
 /**
  * \* Author: MrWangx
@@ -10,6 +10,7 @@ import pers.mrwangx.tools.cquptcrawler.annotation.Display;
  *                  code: 0 登录成功 | 1 登录失败
  *
  **/
+@Display.Separator(",")
 public class LoginResponseInfo {
 
     @Display("code")

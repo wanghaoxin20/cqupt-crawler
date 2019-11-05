@@ -9,10 +9,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+import pers.mrwangx.commons.tool.display.DisplayProcessor;
 import pers.mrwangx.tools.cquptcrawler.entity.*;
-import pers.mrwangx.tools.cquptcrawler.entity.jwzx.LoginResponseInfo;
-import pers.mrwangx.tools.cquptcrawler.entity.jwzx.User;
+import pers.mrwangx.tools.cquptcrawler.jwzx.LoginResponseInfo;
+import pers.mrwangx.tools.cquptcrawler.jwzx.User;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,12 +22,8 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * \* Author: MrWangx
@@ -177,7 +173,7 @@ public class CquptCrawler {
     public static LoginResponseInfo JWZXLogin(URLConfig netType, User user, String vCode) {
         LoginResponseInfo loginInfo = null;
         try {
-            System.out.println(String.format("登录{sno:%s, pwd:%s, vCode:%s}", user.getSno(), user.getPwd(), vCode));
+            System.out.println(String.format("登录[sno:%s, pwd:%s, vCode:%s]", user.getSno(), user.getPwd(), vCode));
             Connection.Response response = Jsoup.connect(netType.getUrl() + URLConfig.LOGIN.getUrl()).method(Connection.Method.POST)
                     .data("name", user.getSno() + "")
                     .data("password", user.getPwd())
@@ -247,7 +243,6 @@ public class CquptCrawler {
                     .cookie(JWZX_SESSIONID_NAME, sessionId)
                     .execute();
             String str = response.body();
-            System.out.println(str);
             downloadId = Integer.parseInt(str.substring(str.indexOf("id="), str.lastIndexOf("'")).split("=")[1]);
         } catch (IOException e) {
             e.printStackTrace();
@@ -278,6 +273,7 @@ public class CquptCrawler {
      * @param dir
      */
     public static void download(String url, String sessionId, String dir) {
+        FileOutputStream fout = null;
         try {
             Connection.Response response = Jsoup.connect(url)
                     .method(Connection.Method.GET)
@@ -287,7 +283,7 @@ public class CquptCrawler {
             String filename = response.header("Content-Disposition").split(";")[1].split("=")[1];
             filename = filename.replaceAll("(^\\\")|(\\\"$)", "");
             BufferedInputStream bin = response.bodyStream();
-            FileOutputStream fout = new FileOutputStream(dir + File.separator + filename);
+            fout = new FileOutputStream(dir + File.separator + filename);
             byte[] data = new byte[1024];
             int len = 0;
             while ((len = bin.read(data, 0, data.length)) != -1) {
@@ -296,6 +292,14 @@ public class CquptCrawler {
             System.out.println("下载成功");
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -604,50 +608,7 @@ public class CquptCrawler {
      * @return
      */
     public static String display(Object o) {
-        StringBuilder builder = new StringBuilder();
-        Class clazz = o.getClass();
-        Field[] fields = clazz.getDeclaredFields();
-        String lineSeparator = System.lineSeparator();
-        if (clazz.isAnnotationPresent(Display.Separator.class)) {
-            Display.Separator s = (Display.Separator) clazz.getAnnotation(Display.Separator.class);
-            lineSeparator = s.value();
-        }
-        int len = fields.length;
-        for (int i = 0; i < len; i++) {
-            Field f = fields[i];
-            f.setAccessible(true);
-            lineSeparator = i == len - 1 ? "" : lineSeparator;
-            try {
-                if (f.isAnnotationPresent(Display.class)) {
-                    Display dis = f.getAnnotation(Display.class);
-                    if (dis.display()) {
-                        String name = dis.value().equals("") ? f.getName()  : dis.value();
-                        builder.append(name + ":" + f.get(o) + lineSeparator);
-                    }
-                } else {
-                    String fieldName = f.getName();
-                    fieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-                    try {
-                        Method m = clazz.getMethod("get" + fieldName);
-                        if (m.isAnnotationPresent(Display.class)) {
-                            Display dis = m.getAnnotation(Display.class);
-                            if (dis.display()) {
-                                String name = dis.value().equals("") ? f.getName()  : dis.value();
-                                builder.append(name + ":" + m.invoke(o) + lineSeparator);
-                            }
-                        }
-                    } catch (NoSuchMethodException e) {
-                        continue;
-                    } catch (InvocationTargetException e) {
-                        throw e;
-                    }
-                }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-                break;
-            }
-        }
-        return builder.toString();
+        return DisplayProcessor.toString(o);
     }
 
 

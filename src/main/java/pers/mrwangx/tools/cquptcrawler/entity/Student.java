@@ -1,7 +1,7 @@
 package pers.mrwangx.tools.cquptcrawler.entity;
 
 import com.alibaba.fastjson.JSONObject;
-import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+import pers.mrwangx.commons.tool.display.annotation.Display;
 
 /****
  * @author:MrWangx
@@ -34,24 +34,6 @@ public class Student {
     private String majorname;   //专业名
     @Display(value = "专业号")
     private String majorid;     //专业号
-
-    @Override
-    public String toString() {
-        return "Student{" +
-                "学号='" + sno + '\'' +
-                ", 姓名='" + name + '\'' +
-                ", 性别='" + sex + '\'' +
-                ", 民族='" + nation + '\'' +
-                ", 生日='" + birthday + '\'' +
-                ", 入学日期='" + rxrq + '\'' +
-                ", 年级='" + grade + '\'' +
-                ", 班级号='" + classid + '\'' +
-                ", 学院名='" + collegename + '\'' +
-                ", 学院号='" + collegeid + '\'' +
-                ", 专业名='" + majorname + '\'' +
-                ", 专业号='" + majorid + '\'' +
-                '}';
-    }
 
     public Student() {}
 

@@ -1,6 +1,6 @@
 package pers.mrwangx.tools.cquptcrawler.entity;
 
-import pers.mrwangx.tools.cquptcrawler.annotation.Display;
+import pers.mrwangx.commons.tool.display.annotation.Display;
 
 /**
  * \* Author: MrWangx
