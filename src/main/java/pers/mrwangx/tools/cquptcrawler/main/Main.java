@@ -57,7 +57,10 @@ public class Main {
                     searchStudent(keyword, netType).forEach(student -> {
                         System.out.println(studentDisplay(student) + System.lineSeparator() + "-------------------------------------");
                     });
-                } else if (line.hasOption("cs")) {
+                }
+
+
+                else if (line.hasOption("cs")) {
                     String[] values = line.getOptionValues("cs");
                     try {
                         if (values.length >= 1) {
@@ -120,11 +123,16 @@ public class Main {
                     } catch (NumberFormatException e) {
                         System.out.println("参数不正确:" + e.getMessage());
                     }
-                } else if (line.hasOption("scs")) {
+                }
+
+                else if (line.hasOption("scs")) {
                     String value = line.getOptionValue("scs");
                     StuCourses stuCourses = CquptCrawler.searchCourse(Integer.parseInt(value), netType);
                     System.out.println(CquptCrawler.stuCoursesDisplay(stuCourses));
-                } else if (line.hasOption("er")) {
+                }
+
+
+                else if (line.hasOption("er")) {
                     String[] value = line.getOptionValues("er");
                     int weekStart = value[0].equals("crt") ? currentSchoolWeek(netType) : Integer.parseInt(value[0]);
                     int weekEnd = value[1].equals("crt") ? currentSchoolWeek(netType) : Integer.parseInt(value[1]);
@@ -146,12 +154,20 @@ public class Main {
                         builder.append(CquptCrawler.display(r) + lineSeparator + "---------------------------" + lineSeparator);
                     });
                     System.out.println(builder.toString());
-                } else if (line.hasOption("wk")) {
+                }
+
+
+                else if (line.hasOption("wk")) {
                     System.out.println("当前学校周数:第" + currentSchoolWeek(netType) + "周");
-                } else if (line.hasOption("jwzx")) {
+                }
+
+
+                else if (line.hasOption("jwzx")) {
                     Jwzx jwzx = new Jwzx(URLConfig.LAN);
                     jwzx.run();
                 }
+
+
                 else if (line.hasOption("h")) {
                     HelpFormatter helpFormatter = new HelpFormatter();
                     helpFormatter.printHelp("cqupt-crawler", options);

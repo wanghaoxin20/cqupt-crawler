@@ -1,14 +1,19 @@
 package pers.mrwangx.tools.cquptcrawler;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
 import pers.mrwangx.tools.command.CommandProcesser;
-import pers.mrwangx.tools.cquptcrawler.entity.URLConfig;
-import pers.mrwangx.tools.cquptcrawler.jwzx.Jwzx;
-import pers.mrwangx.tools.cquptcrawler.jwzx.User;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Enumeration;
 
 /**
  * \* Author: MrWangx
@@ -68,9 +73,11 @@ public class Test {
 //        Jwzx jwzx = new Jwzx(URLConfig.LAN);
 //        jwzx.run();
 
-        CommandProcesser.loadCommands("pers.mrwangx.tools.cquptcrawler.jwzx.command").forEach((k, v) -> {
-            System.out.println(CquptCrawler.display(v));
-        });
+//        CommandProcesser.loadCommands("pers.mrwangx.tools.cquptcrawler.jwzx.command").forEach((k, v) -> {
+//            System.out.println(CquptCrawler.display(v));
+//        });
+
+
     }
 
 
